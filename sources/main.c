@@ -6,22 +6,25 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 17:23:07 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/04 17:30:52 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/20 19:46:25 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_ping.h"
 
-int		usage(void)
+static int		usage(char *file)
 {
-	printf("Usage: %s host\n", __FILE__);
+	printf("Usage: %s host\n", file);
 	return (-1);
 }
 
-int main(int ac, char **av)
+int				main(int ac, char **av)
 {
 	if (ac != 2)
-		return (usage());
-	ft_ping(av[1]);
+		return (usage(av[0]));
+	if (ft_strequ(av[1], "localhost"))
+		ft_ping(ft_strdup(LOCALHOST), 56);
+	else
+		ft_ping(ft_strdup(av[1]), 56);
 	return (0);
 }

@@ -6,7 +6,7 @@
 #    By: World 42  <world42@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/03 14:55:19 by ale-batt          #+#    #+#              #
-#*   Updated: 2017/02/04 18:22:57 by ale-batt         ###   ########.fr       *#
+#*   Updated: 2017/02/20 19:44:08 by ale-batt         ###   ########.fr       *#
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,9 +17,10 @@ O_DIR	=	.OBJS/
 H_DIRS	=	includes
 
 LIBFT	=	../libft
+LIBNETWORK = ../libnetwork
 
 CC		=	gcc
-FLAGS	=	-Wall -Werror -Wextra
+FLAGS	=	-g -Wall -Werror -Wextra
 
 C_DIRS	= $(shell find $(C_DIR) -type d -follow -print)
 C_FILES = $(shell find $(C_DIR) -type f -follow -print | grep ".*\.c$$")
@@ -27,16 +28,16 @@ H_FILES = $(shell find includes -type f -follow -print | grep ".*\.h$$")
 O_DIRS	= $(C_DIRS:$(C_DIR)%=$(O_DIR)%)
 O_FILES = $(C_FILES:$(C_DIR)%.c=$(O_DIR)%.o)
 
+LIB		=	-L$(LIBFT) -lft -L$(LIBNETWORK) -lnetwork
+INCLUDES=	-I$(H_DIRS) -I$(LIBFT)/includes -I$(LIBNETWORK)/includes
+
 # Verbose mode
 V = 0
 # debug mode
 G = 0
 
-LIB		=	-L$(LIBFT) -lft
-INCLUDES=	-I$(H_DIRS) -I$(LIBFT)/includes
-
 C = \033[1;34m
-U = $(C)[$(NAME)]---->\033[0m
+U = $(C)[$(NAME)]----->\033[0m
 SKIP = $(SKIP_$(V))
 SKIP_1 :=
 SKIP_0 := \033[A
@@ -49,11 +50,13 @@ BAR = $(shell printf "%`expr $(BARC) '*' 100 / $(BART)`s" | tr ' ' '=')
 
 .PHONY: all clean fclean re
 
-all		:	$(LIBFT)/libft.a $(O_DIRS) $(NAME)
+all		:	$(LIBFT)/libft.a $(LIBNETWORK)/libnetwork.a $(O_DIRS) $(NAME)
 
 $(LIBFT)/libft.a:
 			@make -C $(LIBFT)
 
+$(LIBNETWORK)/libnetwork.a:
+			@make -C $(LIBNETWORK)
 $(O_DIRS):
 			@mkdir -p $(O_DIR) $(O_DIRS)
 
@@ -71,12 +74,14 @@ $(O_DIR)%.o: $(C_DIR)%.c $(H_FILES)
 			@echo "$(SKIP)\033[A\033[2K$(SKIP)"
 			
 clean	:
-			@make -C $(LIBFT) clean
+#			@make -C $(LIBFT) clean
+			@make -C $(LIBNETWORK) clean
 			@rm -rf $(O_FILES)
 			@echo "$(U)$(C)[CLEAN]\033[0;32m"
 
 fclean	:	clean
-			@make -C $(LIBFT) fclean
+#			@make -C $(LIBFT) fclean
+			@make -C $(LIBNETWORK) fclean
 			@echo "$(U)$(C)[F-CLEAN]\033[0;32m"
 			@rm -rf $(NAME)
 			@echo "$(SKIP)$(U)$(C)[F-CLEAN:\033[1;32m DONE$(C)]\033[0m"
