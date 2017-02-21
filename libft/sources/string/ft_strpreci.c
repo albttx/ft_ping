@@ -1,36 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   ft_strpreci.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 15:47:55 by ale-batt         ###   ########.fr       */
+/*   Created: 2017/01/03 14:50:44 by ale-batt          #+#    #+#             */
+/*   Updated: 2017/01/03 15:03:14 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_H
-# define FT_PING_H
+#include "libft.h"
 
-# include "libft.h"
-# include "libnetwork.h"
-
-# include <arpa/inet.h>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netdb.h>
-
-typedef struct	s_packet
+char	*ft_strpreci(char *str, char c, int preci)
 {
-	int			nb_bytes;
-	char		*ip;
-	int			icmp_seq;
-	int			ttl;
-	time_t		time;
-}				t_packet;
+	char	*tmp;
+	int		len;
 
-int				ft_ping(char *host, int packetsize);
-int				create_socket(void);
-
-#endif
+	len = ft_strlen(str);
+	if (len >= preci)
+		return (str);
+	tmp = ft_strdup(str);
+	ft_memset(str, c, preci);
+	ft_strncpy(str + (preci - len), tmp, len);
+	free(tmp);
+	return (str);
+}

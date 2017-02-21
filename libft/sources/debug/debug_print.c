@@ -1,36 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   debug_print.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 15:47:55 by ale-batt         ###   ########.fr       */
+/*   Created: 2016/01/25 15:20:10 by ale-batt          #+#    #+#             */
+/*   Updated: 2016/01/25 21:07:56 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_H
-# define FT_PING_H
+#include "libft.h"
 
-# include "libft.h"
-# include "libnetwork.h"
+/*
+**	open debug.txt with tail -f
+*/
 
-# include <arpa/inet.h>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netdb.h>
-
-typedef struct	s_packet
+void	set_debug_mode(int mode)
 {
-	int			nb_bytes;
-	char		*ip;
-	int			icmp_seq;
-	int			ttl;
-	time_t		time;
-}				t_packet;
+	if (mode == ON)
+		g_dbg = fopen("debug.txt", "a+");
+	else
+		fclose(g_dbg);
+}
 
-int				ft_ping(char *host, int packetsize);
-int				create_socket(void);
+void	dbg_print(char *format)
+{
+	FILE *fp;
 
-#endif
+	fp = fopen("debug.txt", "a+");
+	fprintf(fp, "%s", format);
+	fclose(fp);
+}

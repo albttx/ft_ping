@@ -1,36 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   accept_binder.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 15:47:55 by ale-batt         ###   ########.fr       */
+/*   Created: 2017/02/17 19:02:37 by ale-batt          #+#    #+#             */
+/*   Updated: 2017/02/20 15:49:24 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_H
-# define FT_PING_H
+#include "libft.h"
+#include "libnetwork.h"
 
-# include "libft.h"
-# include "libnetwork.h"
-
-# include <arpa/inet.h>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netdb.h>
-
-typedef struct	s_packet
+int		accept_binder(int sock)
 {
-	int			nb_bytes;
-	char		*ip;
-	int			icmp_seq;
-	int			ttl;
-	time_t		time;
-}				t_packet;
+	int							cs;
+	socklen_t					addr_len;
+	struct sockaddr_storage		client_addr;
 
-int				ft_ping(char *host, int packetsize);
-int				create_socket(void);
-
-#endif
+	addr_len = sizeof(client_addr);
+	cs = accept(sock, (struct sockaddr*)&client_addr, &addr_len);
+	if (cs == -1)
+	{
+		perror("accept_binder: accept()");
+		return (-1);
+	}
+	return (cs);
+}

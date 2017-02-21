@@ -1,36 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   hostname_to_ip.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 15:47:55 by ale-batt         ###   ########.fr       */
+/*   Created: 2017/02/20 17:43:18 by ale-batt          #+#    #+#             */
+/*   Updated: 2017/02/21 11:56:48 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_H
-# define FT_PING_H
+#include "libnetwork.h"
+#include "libft.h"
 
-# include "libft.h"
-# include "libnetwork.h"
-
-# include <arpa/inet.h>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netdb.h>
-
-typedef struct	s_packet
+char	*hostname_to_ip(const char *hostname)
 {
-	int			nb_bytes;
-	char		*ip;
-	int			icmp_seq;
-	int			ttl;
-	time_t		time;
-}				t_packet;
+	char			*ip;
+	struct hostent	*he;
+	struct in_addr	**addr_list;
 
-int				ft_ping(char *host, int packetsize);
-int				create_socket(void);
-
-#endif
+	ip = ft_strnew(MAX_LEN_IPV4 + 1);
+	he = gethostbyname(hostname); 
+	if (he == NULL)
+	{
+		perror("hostname_to_ip: gethostbyname()");
+		return (NULL);
+	}
+	addr_list = (struct in_addr **)he->h_addr_list;
+	ft_strcpy(ip, inet_ntoa(*addr_list[0]));
+	return (ip);
+}

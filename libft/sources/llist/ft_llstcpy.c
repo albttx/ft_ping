@@ -1,36 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   ft_llstcpy.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 15:47:55 by ale-batt         ###   ########.fr       */
+/*   Created: 2016/01/15 10:38:26 by ale-batt          #+#    #+#             */
+/*   Updated: 2016/08/30 13:50:51 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_H
-# define FT_PING_H
+#include "libft.h"
 
-# include "libft.h"
-# include "libnetwork.h"
-
-# include <arpa/inet.h>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netdb.h>
-
-typedef struct	s_packet
+t_llist	*ft_llstcpy(t_llist *list)
 {
-	int			nb_bytes;
-	char		*ip;
-	int			icmp_seq;
-	int			ttl;
-	time_t		time;
-}				t_packet;
+	t_llist	*new;
+	t_llist	*tmp;
 
-int				ft_ping(char *host, int packetsize);
-int				create_socket(void);
-
-#endif
+	new = NULL;
+	tmp = list;
+	while (tmp)
+	{
+		ft_llstadd_end(&new, ft_llstnew(tmp->content));
+		tmp = tmp->next;
+	}
+	return (new);
+}

@@ -1,36 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   fatal.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 15:47:55 by ale-batt         ###   ########.fr       */
+/*   Created: 2016/12/09 15:34:01 by ale-batt          #+#    #+#             */
+/*   Updated: 2017/02/20 16:34:18 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_H
-# define FT_PING_H
+#include "ft_log.h"
+#include <stdarg.h>
 
-# include "libft.h"
-# include "libnetwork.h"
-
-# include <arpa/inet.h>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netdb.h>
-
-typedef struct	s_packet
+void	log_fatal(char *str, ...)
 {
-	int			nb_bytes;
-	char		*ip;
-	int			icmp_seq;
-	int			ttl;
-	time_t		time;
-}				t_packet;
+	va_list	ap;
+	t_log	*log;
 
-int				ft_ping(char *host, int packetsize);
-int				create_socket(void);
-
-#endif
+	log = log_singleton(NULL);
+	if (log->fd != 1)
+		ft_putendl_color("Log Fatal error. Check logs for details", RED);
+	if (log->fd == -1)
+		exit(-1);
+	va_start(ap, str);
+	ft_putstr_fd(RED, log->fd);
+	ft_multiputs_args(log->fd, str, &ap);
+	ft_putendl_fd(DEFAULT, log->fd);
+	exit(-1);
+}

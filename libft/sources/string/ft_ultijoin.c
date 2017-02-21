@@ -1,36 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   ft_ultijoin.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 15:47:55 by ale-batt         ###   ########.fr       */
+/*   Created: 2015/03/04 13:39:38 by ale-batt          #+#    #+#             */
+/*   Updated: 2016/08/30 14:02:58 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_H
-# define FT_PING_H
+#include "libft.h"
+#include <stdarg.h>
 
-# include "libft.h"
-# include "libnetwork.h"
+/*
+** Utilisation avec une valeur NULL en fin de parametre
+*/
 
-# include <arpa/inet.h>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netdb.h>
-
-typedef struct	s_packet
+char	*ft_ultijoin(char *str, ...)
 {
-	int			nb_bytes;
-	char		*ip;
-	int			icmp_seq;
-	int			ttl;
-	time_t		time;
-}				t_packet;
+	va_list	ap;
+	char	*tmp;
+	char	*cpy;
+	int		lol;
 
-int				ft_ping(char *host, int packetsize);
-int				create_socket(void);
-
-#endif
+	lol = 0;
+	va_start(ap, str);
+	while (42)
+	{
+		tmp = va_arg(ap, char *);
+		if (!tmp)
+			break ;
+		cpy = ft_strdup(str);
+		if (lol++ > 0)
+			free(str);
+		str = ft_strjoin(cpy, tmp);
+		free(cpy);
+	}
+	va_end(ap);
+	return (str);
+}

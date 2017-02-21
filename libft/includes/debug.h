@@ -1,36 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   ft_debug.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 15:47:55 by ale-batt         ###   ########.fr       */
+/*   Created: 2016/01/25 15:49:06 by ale-batt          #+#    #+#             */
+/*   Updated: 2016/10/26 18:36:08 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_H
-# define FT_PING_H
+#ifndef DEBUG_H
+# define DEBUG_H
 
-# include "libft.h"
-# include "libnetwork.h"
+# define ON 1
+# define OFF 0
 
-# include <arpa/inet.h>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netdb.h>
+# define DGB(mode) set_debug_mode(mode);
 
-typedef struct	s_packet
-{
-	int			nb_bytes;
-	char		*ip;
-	int			icmp_seq;
-	int			ttl;
-	time_t		time;
-}				t_packet;
+FILE	*g_dbg;
 
-int				ft_ping(char *host, int packetsize);
-int				create_socket(void);
+void	set_debug_mode(int mode);
+void	dbg_print(char *str);
 
 #endif

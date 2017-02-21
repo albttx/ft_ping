@@ -1,36 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ping.h                                          :+:      :+:    :+:   */
+/*   protocol_announcement.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 15:47:55 by ale-batt         ###   ########.fr       */
+/*   Created: 2017/02/09 16:24:42 by ale-batt          #+#    #+#             */
+/*   Updated: 2017/02/14 13:23:17 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PING_H
-# define FT_PING_H
+#include "libnetwork.h"
+#include "libft.h"
 
-# include "libft.h"
-# include "libnetwork.h"
-
-# include <arpa/inet.h>
-# include <sys/types.h>
-# include <sys/socket.h>
-# include <netdb.h>
-
-typedef struct	s_packet
+int		sock_announce_protocol(const int sock, const int protocol)
 {
-	int			nb_bytes;
-	char		*ip;
-	int			icmp_seq;
-	int			ttl;
-	time_t		time;
-}				t_packet;
+	uint32_t	type;
 
-int				ft_ping(char *host, int packetsize);
-int				create_socket(void);
+	if (protocol == SIZED_PROTOCOL)
+		type = htonl(SIZED_PROTOCOL);
+	else
+		type = htonl(LOOOP_PROTOCOL);
+	return (sock_send_uint32(sock, type));
+}
 
-#endif
+int		sock_get_protocol(const int sock)
+{
+	uint32_t	ret;
+
+	ret = sock_get_uint32(sock);
+	return ((int)ntohl(ret));
+}
