@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 15:47:55 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/22 21:12:00 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,16 +21,18 @@
 # include <sys/socket.h>
 # include <netdb.h>
 
-typedef struct	s_packet
+typedef struct	s_pingopt
 {
-	int			nb_bytes;
-	char		*ip;
-	int			icmp_seq;
-	int			ttl;
-	time_t		time;
-}				t_packet;
+	long		ntransmitted;
+}				t_pingopt;
+
+t_pingopt		ping_opt;
 
 int				ft_ping(char *host, int packetsize);
 int				create_socket(void);
+
+unsigned short	in_cksum(unsigned short *addr, int len);
+void			print_ip_header(char *buff);
+void			print_icmp_packet(char *buff);
 
 #endif
