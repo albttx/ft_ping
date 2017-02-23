@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 15:17:27 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/22 21:13:26 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/23 20:30:22 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,9 @@ int		set_socket_options(int sock)
 	/*ret[0] = setsockopt(sock, IPPROTO_IP, IP_HDRINCL, (char *)&on, sizeof(on));*/
 	/*ret[0] = setsockopt(sock, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on));*/
 	/*ret[1] = setsockopt(sock, SOL_SOCKET, SO_BROADCAST, (char *)&on, sizeof(on));*/
-	/*ret[2] = setsockopt(sock, SOL_IP, IP_TTL, &val, sizeof(val));*/
+	ret[0] = setsockopt(sock, IPPROTO_IP, IP_PKTINFO, &on, sizeof(on));
+	ret[1] = setsockopt(sock, IPPROTO_IP, IP_TOS, &on, sizeof(on));
+	ret[2] = setsockopt(sock, IPPROTO_IP, IP_RECVTTL, &on, sizeof(on));
 	if (ret[0] == -1 || ret[1] == -1 || ret[3] == -1)
 	{
 		perror("setsockopt");
