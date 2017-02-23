@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 17:30:26 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/22 21:27:22 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/23 12:38:04 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void		print_packet(char *packet, struct sockaddr_in *from)
 	printf("\n");
 }
 
-int			pinger(int sock, char *hostip)
+void			pinger(int signal)
 {
 	char				*packet;
 	size_t				size;
@@ -50,23 +50,19 @@ int			pinger(int sock, char *hostip)
 	packet = ft_strnew(size);
 	
 	connection.sin_family = AF_INET;
-	/*connection.sin_port = 0;*/
-	connection.sin_addr.s_addr = inet_addr(hostip);
-	/*connection.sin_addr.s_addr = htonl(INADDR_ANY);*/
-	/*memcpy(&connection.sin_addr, h->h_addr, sizeof(connection.sin_addr));*/
+	connection.sin_port = 0;
+	connection.sin_addr.s_addr = inet_addr(ping_opt.hostip);
 
 	icmp_packet = (struct icmp *)packet;
-	icmp_packet->icmp_type      = ICMP_ECHO;
-	icmp_packet->icmp_code      = 0;
-	icmp_packet->icmp_cksum     = in_cksum((unsigned short *)icmp_packet, size);
+	icmp_packet->icmp_type = ICMP_ECHO;
+	icmp_packet->icmp_code = 0;
+	icmp_packet->icmp_cksum = in_cksum((unsigned short *)icmp_packet, size);
 
-	/*icmp_packet->icmp_cksum     = in_cksum((unsigned short *)icmp_packet, sizeof(packet));*/
-	if (sendto(sock, packet, size, 0, (struct sockaddr *)&connection, sizeof(struct sockaddr_in)) == -1)
+	if (sendto(ping_opt.sock, packet, size, 0, (struct sockaddr *)&connection, sizeof(struct sockaddr_in)) == -1)
 	{
 		perror("sendto");
-		return (-1);
 	}
-	return (1);
+	alarm(1);
 }
 
 int			listener(int sock)
@@ -78,7 +74,7 @@ int			listener(int sock)
 	size_t				size;
 
 	size = sizeof(struct iphdr) + sizeof(struct icmphdr);
-	/*while (42)*/
+	while (42)
 	{
 		packet_recv = ft_strnew(size);
 		fromlen = sizeof(from);
@@ -88,46 +84,34 @@ int			listener(int sock)
 			return (-1);
 		}
 		print_packet(packet_recv, &from);
+		alarm((u_int)1);
 	}
 	return (1);
 }
 
-int			loop(int sock, char *hostip)
+static void		init(void)
 {
-	int i = 0;
-
-	while (i < 5)
-	{
-		pinger(sock, hostip);
-		listener(sock);
-		sleep(1);
-		i++;
-	}
-	return 1;
-}
-
-void		init(void)
-{
+	ping_opt.sock = 0;
+	ping_opt.hostip = NULL;
 	ping_opt.ntransmitted = 0;
 }
 
-int			ft_ping(char *hostname, int packetsize)
+int				ft_ping(char *hostname, int packetsize)
 {
-	char				*hostip;
-	int					sock;
-
 	init();
-	hostip = hostname_to_ip(hostname);
-	if (!hostip)
+	ping_opt.hostip = hostname_to_ip(hostname);
+	if (!ping_opt.hostip)
 	{
 		printf("ping: cannot resolve %s: Unknown host\n", hostname);
 		return (-1);
 	}
-	printf("PING %s (%s): %d data bytes\n", hostname, hostip, packetsize);
-	sock = create_socket();
-	if (sock == -1)
+	printf("PING %s (%s): %d data bytes\n", hostname, ping_opt.hostip, packetsize);
+	ping_opt.sock = create_socket();
+	if (ping_opt.sock == -1)
 		return (-1);
-	loop(sock, hostip);
-	free(hostip);
+	signal(SIGALRM, pinger);
+	pinger(0);
+	listener(ping_opt.sock);
+	free(ping_opt.hostip);
 	return (1);
 }

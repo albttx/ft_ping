@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/22 21:12:00 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/23 12:22:49 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,12 @@
 # include <sys/socket.h>
 # include <netdb.h>
 
+# include <signal.h>
+
 typedef struct	s_pingopt
 {
+	int			sock;
+	char		*hostip;
 	long		ntransmitted;
 }				t_pingopt;
 
