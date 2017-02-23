@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/23 12:22:49 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/23 16:48:04 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,18 @@
 
 # include <signal.h>
 
+# define	DEFDATALEN	(64 - 8)
+# define	MAXIPLEN	60
+# define	MAXICMPLEN	76
+# define	MAXPACKET	(65536 - 60 - 8)
+
 typedef struct	s_pingopt
 {
 	int			sock;
 	char		*hostip;
 	long		ntransmitted;
+	int			datalen;
+	int			packlen;
 }				t_pingopt;
 
 t_pingopt		ping_opt;
