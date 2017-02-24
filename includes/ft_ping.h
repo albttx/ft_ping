@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/23 16:48:04 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/24 20:21:21 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,32 +18,67 @@
 
 # include <arpa/inet.h>
 # include <sys/types.h>
+# include <sys/time.h>
 # include <sys/socket.h>
 # include <netdb.h>
+# include <netinet/ip.h>
+# include <netinet/ip_icmp.h>
 
 # include <signal.h>
 
-# define	DEFDATALEN	(64 - 8)
-# define	MAXIPLEN	60
-# define	MAXICMPLEN	76
-# define	MAXPACKET	(65536 - 60 - 8)
+# define	DEFDATA_LEN	(64 - 8)
+# define	MAX_IP_LEN	60
+# define	MAX_ICMP_LEN	76
+# define	MAX_PACKET_LEN	(65536 - 60 - 8)
 
-typedef struct	s_pingopt
+# define	MIN_PACKET_LEN (sizeof(struct iphdr) + sizeof(struct icmphdr))
+
+typedef enum		e_pingflags
 {
-	int			sock;
-	char		*hostip;
-	long		ntransmitted;
-	int			datalen;
-	int			packlen;
-}				t_pingopt;
+	F_NONE =		0,
+	F_VERBOSE =		1,
+	F_QUIET =		2,
+}					t_pingflags;
 
-t_pingopt		ping_opt;
+typedef struct		s_pingopt
+{
+	int				sock;
+	char			*host;
+	char			*hostip;
+	long			ntransmitted;
+	long			nreceived;
+	int				count;
+	int				datalen;
+	int				id;
+	double			tmin;
+	double			tmax;
+	double			tsum;
+	struct timeval	send_time;
+	t_pingflags		flags;
+}					t_pingopt;
 
-int				ft_ping(char *host, int packetsize);
-int				create_socket(void);
+typedef struct		s_packet
+{
+	int				size;
+	char			host[INET_ADDRSTRLEN];
+	int				ttl;
+	int				seq;
+}					t_packet;
 
-unsigned short	in_cksum(unsigned short *addr, int len);
-void			print_ip_header(char *buff);
-void			print_icmp_packet(char *buff);
+t_pingopt			ping_opt;
+
+int					ft_ping(char *host);
+int					create_socket(void);
+int					parser(char **av);
+
+void				pinger(int singal);
+int					listener(int sock);
+void				read_packet(char packet[], int len);
+
+void				finished(int signal);
+unsigned short		in_cksum(unsigned short *addr, int len);
+void				tvsub(struct timeval *out, struct timeval *in);
+void				print_ip_header(char *buff);
+void				print_icmp_packet(char *buff);
 
 #endif

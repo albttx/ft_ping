@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/20 17:43:18 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/21 11:56:48 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/24 14:00:31 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,11 @@ char	*hostname_to_ip(const char *hostname)
 	struct hostent	*he;
 	struct in_addr	**addr_list;
 
-	ip = ft_strnew(MAX_LEN_IPV4 + 1);
 	he = gethostbyname(hostname); 
 	if (he == NULL)
-	{
-		perror("hostname_to_ip: gethostbyname()");
 		return (NULL);
-	}
 	addr_list = (struct in_addr **)he->h_addr_list;
+	ip = ft_strnew(MAX_LEN_IPV4 + 1);
 	ft_strcpy(ip, inet_ntoa(*addr_list[0]));
 	return (ip);
 }
