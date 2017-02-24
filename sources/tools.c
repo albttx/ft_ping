@@ -1,16 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   in_checksum.c                                      :+:      :+:    :+:   */
+/*   tools.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/22 13:09:44 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/22 13:11:02 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/24 17:34:19 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <netinet/ip_icmp.h>
+
+void	tvsub(struct timeval *out, struct timeval *in)
+{
+	if ((out->tv_usec -= in->tv_usec) < 0)
+	{
+		--out->tv_sec;
+		out->tv_usec += 1000000;					    
+	}
+	out->tv_sec -= in->tv_sec;
+}
 
 unsigned short in_cksum(unsigned short *addr, int len)
 {
