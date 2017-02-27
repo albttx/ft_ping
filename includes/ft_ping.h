@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/24 20:21:21 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/27 18:55:13 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef enum		e_pingflags
 	F_QUIET =		2,
 }					t_pingflags;
 
-typedef struct		s_pingopt
+typedef struct		s_env
 {
 	int				sock;
 	char			*host;
@@ -48,6 +48,8 @@ typedef struct		s_pingopt
 	long			ntransmitted;
 	long			nreceived;
 	int				count;
+	int				ttl;
+	double			sumsq;
 	int				datalen;
 	int				id;
 	double			tmin;
@@ -55,17 +57,20 @@ typedef struct		s_pingopt
 	double			tsum;
 	struct timeval	send_time;
 	t_pingflags		flags;
-}					t_pingopt;
+}					t_env;
 
 typedef struct		s_packet
 {
 	int				size;
-	char			host[INET_ADDRSTRLEN];
+	char			src[INET_ADDRSTRLEN];
 	int				ttl;
 	int				seq;
+	char			dst[INET_ADDRSTRLEN];
+	int				tos;
+	int				id;
 }					t_packet;
 
-t_pingopt			ping_opt;
+t_env			env;
 
 int					ft_ping(char *host);
 int					create_socket(void);
@@ -73,12 +78,13 @@ int					parser(char **av);
 
 void				pinger(int singal);
 int					listener(int sock);
-void				read_packet(char packet[], int len);
+int					read_packet(char packet[], int len);
 
 void				finished(int signal);
 unsigned short		in_cksum(unsigned short *addr, int len);
 void				tvsub(struct timeval *out, struct timeval *in);
-void				print_ip_header(char *buff);
-void				print_icmp_packet(char *buff);
+
+void				pr_packet(t_packet *pack);
+void				pr_info(struct ip *ip, struct icmp *icmp, int len);
 
 #endif

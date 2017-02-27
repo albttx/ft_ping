@@ -1,4 +1,4 @@
-FROM debian:7
+FROM debian:8
 
 MAINTAINER <ale-batt@student.42.fr>
 

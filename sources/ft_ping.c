@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 17:30:26 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/24 20:07:48 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/27 19:48:39 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,24 @@
 
 int				ft_ping(char *hostname)
 {
-	if (!ping_opt.hostip)
+	if (!env.hostip)
 	{
 		printf("ping: cannot resolve %s: Unknown host\n", hostname);
 		return (-1);
 	}
-	ping_opt.host = hostname;
-	printf("PING %s (%s): %d data bytes\n", hostname, ping_opt.hostip,
-			(ping_opt.datalen < 48) ? 48 : ping_opt.datalen );
-	ping_opt.sock = create_socket();
-	if (ping_opt.sock == -1)
+	env.host = hostname;
+	printf("PING %s (%s): %d data bytes", hostname, env.hostip,
+			(env.datalen < 56) ? 56 : env.datalen );
+	if (env.flags & F_VERBOSE)
+		printf(", id 0x%04x = %d", env.id, env.id);
+	printf("\n");
+	env.sock = create_socket();
+	if (env.sock == -1)
 		return (-1);
 	signal(SIGALRM, pinger);
 	signal(SIGINT, finished);
 	pinger(0);
-	listener(ping_opt.sock);
-	free(ping_opt.hostip);
+	listener(env.sock);
+	free(env.hostip);
 	return (1);
 }

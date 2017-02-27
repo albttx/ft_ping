@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 19:22:30 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/24 20:09:24 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/27 17:45:54 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,8 @@ int				listener(int sock)
 			perror("recvmsg");
 			return (-1);
 		}
-		read_packet(packet, cc);
-		ping_opt.nreceived++;
-		/*print_msg(&msg_h);*/
+		if (read_packet(packet, cc) > 0)
+			env.nreceived++;
 		alarm((u_int)1);
 	}
 	return (1);
