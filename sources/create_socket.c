@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/21 15:17:27 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/27 18:50:50 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/28 20:04:03 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,6 @@ static int		set_socket_options(int sock)
 
 	on = 1;
 	setsockopt(sock, IPPROTO_IP, IP_RECVTTL, &on, sizeof(on));
-	setsockopt(sock, IPPROTO_IP, IP_RECVTOS, &on, sizeof(on));
 	if (env.ttl > 0)
 		setsockopt(sock, IPPROTO_IP, IP_TTL, &env.ttl, sizeof(env.ttl));
 	return (sock);

@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/27 18:12:53 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/27 18:54:47 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/28 19:28:17 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,29 @@ static void	fill_packet(t_packet *p, struct ip *ip, struct icmp *icmp, int l)
 	p->ttl = ip->ip_ttl;
 }
 
+static int	verification(struct icmp *icmp, struct ip *ip, int len)
+{
+	if (icmp->icmp_type != ICMP_ECHOREPLY)
+	{
+		if (env.flags & F_VERBOSE)
+			pr_info(ip, icmp, len);
+		return (ERR_NOT_ECHOREPLY);
+	}
+	if (icmp->icmp_id != env.id)
+	{
+		if (env.flags & F_VERBOSE)
+			printf("ft_ping: packet received %d bytes id invalid\n", len);
+		return (ERR_BAD_ID);
+	}
+	if (in_cksum((unsigned short *)&icmp->icmp_cksum, len))
+	{
+		if (env.flags & F_VERBOSE)
+			printf("ft_ping: BAD CHECKSUM\n");
+		return (ERR_BAD_CKSUM);
+	}
+	return (1);
+}
+
 int			read_packet(char packet[], int len)
 {
 	struct ip		*ip;
@@ -33,27 +56,12 @@ int			read_packet(char packet[], int len)
 	t_packet		pack;
 
 	ip = (struct ip *)(packet);
-	icmp = (void *)ip + sizeof(struct ip);
-	if (icmp->icmp_id != env.id)
-	{
-		if (env.flags & F_VERBOSE)
-			printf("ft_ping: packet received %d bytes id invalid", len);
-		return (ERR_BAD_ID);
-	}
+	icmp = (void *)ip + sizeof(*ip);
 	fill_packet(&pack, ip, icmp, len);
-	if (icmp->icmp_type != ICMP_ECHOREPLY && env.flags & F_VERBOSE)
-	{
-		pr_info(ip, icmp, len);
-		return (ERR_NOT_ECHOREPLY);
-	}
-	if (in_cksum((unsigned short *)&icmp->icmp_cksum, len) && env.flags & F_VERBOSE)
-	{
-		puts("ft_ping: BAD CHECKSUM");
-		return (ERR_BAD_CKSUM);
-	}
-	else
-		pr_packet(&pack);
-	if (env.count != -1 && env.count == (icmp->icmp_seq+1))
+	if (verification(icmp, ip, len) < 0)
+		return (-1);
+	pr_packet(&pack);
+	if (env.count != -1 && env.count == (icmp->icmp_seq + 1))
 		finished(0);
 	return (1);
 }

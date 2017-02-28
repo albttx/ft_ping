@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 17:30:26 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/27 19:48:39 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/02/28 19:28:40 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int				ft_ping(char *hostname)
 	}
 	env.host = hostname;
 	printf("PING %s (%s): %d data bytes", hostname, env.hostip,
-			(env.datalen < 56) ? 56 : env.datalen );
+			(env.datalen < 56) ? 56 : env.datalen);
 	if (env.flags & F_VERBOSE)
 		printf(", id 0x%04x = %d", env.id, env.id);
 	printf("\n");

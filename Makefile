@@ -6,7 +6,7 @@
 #    By: World 42  <world42@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/11/03 14:55:19 by ale-batt          #+#    #+#              #
-#*   Updated: 2017/02/27 15:09:07 by ale-batt         ###   ########.fr       *#
+#*   Updated: 2017/02/28 20:14:14 by ale-batt         ###   ########.fr       *#
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,8 +20,8 @@ LIBFT	=	./libft
 LIBNETWORK = ./libnetwork
 
 CC		=	gcc
-FLAGS	=	-g -Wall -Werror -Wextra
-FLAGS   +=  -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter
+FLAGS	=	-Wall -Werror -Wextra
+#FLAGS   +=  -Wno-unused-variable -Wno-unused-but-set-variable -Wno-unused-parameter
 
 C_DIRS	= $(shell find $(C_DIR) -type d -follow -print)
 C_FILES = $(shell find $(C_DIR) -type f -follow -print | grep ".*\.c$$")
@@ -34,11 +34,14 @@ V = 0
 # debug mode
 G = 0
 
-LIB		=	-L$(LIBNETWORK) -lnetwork -L$(LIBFT) -lft
-INCLUDES=	-I$(H_DIRS) -I$(LIBFT)/includes -I$(LIBNETWORK)/includes
+LIB		+=	-L$(LIBNETWORK) -lnetwork
+LIB		+=	-L$(LIBFT) -lft
+
+INCLUDES =	-I./$(H_DIRS) -I$(LIBFT)/includes
+INCLUDES +=	-I$(LIBNETWORK)/includes
 
 C = \033[1;33m
-U = $(C)[$(NAME)]------>\033[0m
+U = $(C)[$(NAME)]----->\033[0m
 SKIP = $(SKIP_$(V))
 SKIP_1 :=
 SKIP_0 := \033[A
@@ -49,7 +52,13 @@ BAR = $(shell printf "%`expr $(BARC) '*' 100 / $(BART)`s" | tr ' ' '=')
 
 #--------------------------------------------------------------------#
 
-all		:	$(O_DIRS) $(NAME)
+all		:	$(LIBFT)/libft.a $(LIBNETWORK)/libnetwork.a $(O_DIRS) $(NAME)
+
+$(LIBFT)/libft.a:
+			@make -C $(LIBFT)
+
+$(LIBNETWORK)/libnetwork.a:
+			@make -C $(LIBNETWORK)
 
 $(O_DIRS):
 			@mkdir -p $(O_DIR) $(O_DIRS)
@@ -63,7 +72,7 @@ $(NAME)	:	$(O_FILES)
 $(O_DIR)%.o: $(C_DIR)%.c $(H_FILES)
 			@echo "$(U)$(C)[COMPILE: \033[1;31m$<\033[A\033[0m"
 			@echo "\033[0;32m"
-			@$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@ $(LIB)
+			@$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
 			@printf "\033[1;31m[%-100s] %s%%\n" $(BAR) `echo $W|wc -w|tr -d ' '`
 			@echo "$(SKIP)\033[A\033[2K$(SKIP)"
 			
@@ -71,11 +80,15 @@ clean	:
 			@rm -rf $(O_FILES)
 			@echo "$(U)$(C)[CLEAN]\033[0;32m"
 			@echo "$(SKIP)$(U)$(C)[CLEAN:\033[1;32m   DONE$(C)]\033[0m"
+			@make -C $(LIBFT) clean
+			@make -C $(LIBNETWORK) clean
 
 fclean	:	clean
 			@echo "$(U)$(C)[F-CLEAN]\033[0;32m"
 			@rm -rf $(NAME)
 			@echo "$(SKIP)$(U)$(C)[F-CLEAN:\033[1;32m DONE$(C)]\033[0m"
+			@make -C $(LIBFT) fclean
+			@make -C $(LIBNETWORK) fclean
 
 re		:	fclean all
 

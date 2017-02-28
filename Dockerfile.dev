@@ -5,10 +5,13 @@ MAINTAINER <ale-batt@student.42.fr>
 RUN apt-get update
 RUN apt-get install -y build-essential
 
-ADD . /app
+#ADD . /app
+#ADD libft /app
+#ADD libnetwork /app
 WORKDIR /app
 
-RUN ls -la
-RUN cd /app && make fclean && make
+VOLUME /app
 
-ENTRYPOINT ["/app/ft_ping"]
+# RUN make -C /app
+
+#ENTRYPOINT ["/app/ft_ping"]
