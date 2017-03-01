@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/04 17:23:24 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/28 20:05:43 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/03/01 11:46:48 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,19 +26,17 @@
 
 # include <signal.h>
 
-# define	DEFDATA_LEN	(64 - 8)
-# define	MAX_IP_LEN	60
-# define	MAX_ICMP_LEN	76
-# define	MAX_PACKET_LEN	(65536 - 60 - 8)
-
-# define	MIN_PACKET_LEN 28
-//# define	MIN_PACKET_LEN (sizeof(struct iphdr) + sizeof(struct icmphdr))
+# define DEFDATA_LEN (64 - 8)
+# define MAX_IP_LEN 60
+# define MAX_ICMP_LEN 76
+# define MAX_PACKET_LEN (65536 - 60 - 8)
+# define MIN_PACKET_LEN 28
 
 typedef enum		e_pingflags
 {
-	F_NONE =		0,
-	F_VERBOSE =		1,
-	F_QUIET =		2,
+	F_NONE = 0,
+	F_VERBOSE = 1,
+	F_QUIET = 2,
 }					t_pingflags;
 
 typedef struct		s_env
@@ -71,7 +69,7 @@ typedef struct		s_packet
 	int				id;
 }					t_packet;
 
-t_env			env;
+t_env				g_env;
 
 int					ft_ping(char *host);
 int					create_socket(void);

@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 19:41:17 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/28 19:22:12 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/03/01 11:45:48 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,21 +17,21 @@ void		pr_packet(t_packet *pack)
 	struct timeval	tv;
 	double			triptime;
 
-	if (env.flags & F_QUIET)
+	if (g_env.flags & F_QUIET)
 		return ;
 	gettimeofday(&tv, NULL);
 	printf("%d bytes from %s: ", pack->size, pack->src);
 	printf("icmp_seq=%d ", pack->seq);
 	printf("ttl=%d ", pack->ttl);
-	tvsub(&tv, &env.send_time);
+	tvsub(&tv, &g_env.send_time);
 	triptime = ((double)tv.tv_sec) * 1000.0 + ((double)tv.tv_usec) / 1000.0;
 	printf("time=%.3f ms", triptime);
-	if (triptime < env.tmin)
-		env.tmin = triptime;
-	if (triptime > env.tmax)
-		env.tmax = triptime;
-	env.tsum += triptime;
-	env.sumsq += triptime * triptime;
+	if (triptime < g_env.tmin)
+		g_env.tmin = triptime;
+	if (triptime > g_env.tmax)
+		g_env.tmax = triptime;
+	g_env.tsum += triptime;
+	g_env.sumsq += triptime * triptime;
 	printf("\n");
 }
 
@@ -67,7 +67,7 @@ void		pr_info(struct ip *ip, struct icmp *icmp, int len)
 {
 	unsigned int	i;
 
-	printf("%d bytes from %s (%s): %s\n", len, env.host,
+	printf("%d bytes from %s (%s): %s\n", len, g_env.host,
 			inet_ntoa(*(struct in_addr *)&ip->ip_src.s_addr),
 			pr_icmp_err_code(icmp));
 	printf("IP Hdr Dump:\n");

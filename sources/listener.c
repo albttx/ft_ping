@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/24 19:22:30 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/03/01 11:34:37 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/03/01 11:45:48 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ static void		recv_loop(int sock, struct msghdr *msg_h)
 			return ;
 		}
 		if (read_packet(packet, cc) > 0)
-			env.nreceived++;
+			g_env.nreceived++;
 		alarm((unsigned int)1);
 	}
 }

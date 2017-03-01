@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/27 18:12:53 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/28 19:28:17 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/03/01 11:45:48 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,19 @@ static int	verification(struct icmp *icmp, struct ip *ip, int len)
 {
 	if (icmp->icmp_type != ICMP_ECHOREPLY)
 	{
-		if (env.flags & F_VERBOSE)
+		if (g_env.flags & F_VERBOSE)
 			pr_info(ip, icmp, len);
 		return (ERR_NOT_ECHOREPLY);
 	}
-	if (icmp->icmp_id != env.id)
+	if (icmp->icmp_id != g_env.id)
 	{
-		if (env.flags & F_VERBOSE)
+		if (g_env.flags & F_VERBOSE)
 			printf("ft_ping: packet received %d bytes id invalid\n", len);
 		return (ERR_BAD_ID);
 	}
 	if (in_cksum((unsigned short *)&icmp->icmp_cksum, len))
 	{
-		if (env.flags & F_VERBOSE)
+		if (g_env.flags & F_VERBOSE)
 			printf("ft_ping: BAD CHECKSUM\n");
 		return (ERR_BAD_CKSUM);
 	}
@@ -61,7 +61,7 @@ int			read_packet(char packet[], int len)
 	if (verification(icmp, ip, len) < 0)
 		return (-1);
 	pr_packet(&pack);
-	if (env.count != -1 && env.count == (icmp->icmp_seq + 1))
+	if (g_env.count != -1 && g_env.count == (icmp->icmp_seq + 1))
 		finished(0);
 	return (1);
 }

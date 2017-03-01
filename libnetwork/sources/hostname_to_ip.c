@@ -6,7 +6,7 @@
 /*   By: ale-batt <ale-batt@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/02/20 17:43:18 by ale-batt          #+#    #+#             */
-/*   Updated: 2017/02/24 14:00:31 by ale-batt         ###   ########.fr       */
+/*   Updated: 2017/03/01 11:49:36 by ale-batt         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*hostname_to_ip(const char *hostname)
 	struct hostent	*he;
 	struct in_addr	**addr_list;
 
-	he = gethostbyname(hostname); 
+	he = gethostbyname(hostname);
 	if (he == NULL)
 		return (NULL);
 	addr_list = (struct in_addr **)he->h_addr_list;
